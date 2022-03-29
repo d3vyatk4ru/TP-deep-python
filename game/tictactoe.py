@@ -1,13 +1,18 @@
-
+""" class TicTacGame """
 class TicTacGame:
+    """
+    Класс реализует игру в крестики-нолики
+    """
 
     CHECK = tuple(range(1, 4))
-    END_GAME = False
+    draw_game = False
 
     def __init__(self) -> None:
         self.board = [["_" for _ in range(3)] for _ in range(3)]
 
-    def _show_board(self) -> None:
+    def show_board(self) -> None:
+
+        """ Show the game board """
 
         for i in range(3):
             raw = ""
@@ -20,14 +25,17 @@ class TicTacGame:
         print("-------------")
         print("  1   2   3  ")
 
-    def _validate_input(self, data: str) -> tuple:
+    def validate_input(self, data: str) -> tuple:
+
+        """ Check input data """
 
         try:
-            x, y = tuple(map(int, data))
+            x_c, y_c = tuple(map(int, data))
         except ValueError:
             return False, None, None
 
-        return (True, x - 1, y - 1) if x in self.CHECK and y in self.CHECK else (False, None, None)
+        return (True, x_c - 1, y_c - 1) if x_c in self.CHECK and \
+            y_c in self.CHECK else (False, None, None)
 
     def _input_data(self, sign: str) -> None:
 
@@ -37,21 +45,23 @@ class TicTacGame:
 
             data: str = input().split()
 
-            answer, x, y = self._validate_input(data)
+            answer, x_c, y_c = self.validate_input(data)
 
-            if answer and self.board[x][y] == "_":
+            if answer and self._check_occupied_cell(x_c, y_c):
                 break
 
-            print("Error!!! Input again: ", end ="")
+            print("Error!!! Input again: ", end="")
 
-        self.board[x][y] = sign
+        self.board[x_c][y_c] = sign
 
-    def _check_winner(self) -> bool:
+    def check_winner(self) -> bool:
 
-        count: int = sum([self.board[i].count('_') for i in range(len(self.board))])
+        """ Check winner player"""
 
-        if not count:
-            self.END_GAME = True
+        count: int = \
+            sum([self.board[i].count('_')for i in range(len(self.board))])
+
+        self._check_draw(count)
 
         # если на поле меньше 5 значений, не заходим
         if count < 5:
@@ -59,7 +69,8 @@ class TicTacGame:
             # check raws
             for i, _ in enumerate(self.board):
                 if self.board[i][0] != "_" and \
-                    all(elem == self.board[i][0] for elem in self.board[i]):
+                        all(elem == self.board[i][0] for elem in
+                            self.board[i]):
                     return True
 
             # check col
@@ -75,10 +86,10 @@ class TicTacGame:
             # check inverse diag
             for i in range(len(self.board) - 1):
                 if self.board[i][len(self.board) - i - 1] !=\
-                    self.board[i + 1][len(self.board) - i - 2]:
+                        self.board[i + 1][len(self.board) - i - 2]:
                     break
-                if  self.board[i][len(self.board) - i - 1] == "_":
-                        break
+                if self.board[i][len(self.board) - i - 1] == "_":
+                    break
             else:
                 return True
 
@@ -93,31 +104,44 @@ class TicTacGame:
 
         return False
 
+    def _check_draw(self, count: int) -> None:
+
+        if not count:
+            self.draw_game = True
+
+    def _check_occupied_cell(self, x_c: int, y_c: int) -> bool:
+
+        return bool(self.board[x_c][y_c] == "_")
+
     def start_game(self) -> None:
+        """
+        Функция начинает игру, посредством запуска
+        """
 
         while True:
 
-            self._show_board()
+            self.show_board()
 
             for sign in ("O", "X"):
 
                 print(f"Step {sign}")
                 self._input_data(sign)
-                self._show_board()
-                win = self._check_winner()
+                self.show_board()
+                win = self.check_winner()
 
                 if win:
                     print(f"Sign {sign} is winner!")
                     break
 
-                if self.END_GAME:
+                if self.draw_game:
                     break
 
             if win:
                 break
 
-            if self.END_GAME:
+            if self.draw_game:
                 print('Game over!')
+                break
 
 
 if __name__ == "__main__":
