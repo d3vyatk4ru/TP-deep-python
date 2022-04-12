@@ -4,8 +4,9 @@ from collections import deque
 OPEN_BRACKET = '<'
 CLOSE_BRACKET = '>'
 
-def parse_html(html_str: str, open_tag_callback, data_callback, close_tag_callback) -> List[str]:
 
+def parse_html(html_str: str, open_tag_callback, data_callback,
+               close_tag_callback) -> List[str]:
     """
     Делаем парсинг html
     """
@@ -46,6 +47,7 @@ def parse_html(html_str: str, open_tag_callback, data_callback, close_tag_callba
 
         stack_data[-1] += data
 
+
 def get_tag_name(html_str: str, idx: int) -> str:
 
     """
@@ -60,6 +62,7 @@ def get_tag_name(html_str: str, idx: int) -> str:
         idx += 1
 
     return tag_name
+
 
 def get_data(html_str: str, idx: int) -> str:
 
@@ -76,24 +79,29 @@ def get_data(html_str: str, idx: int) -> str:
 
     return data
 
+
+def fopen_callback(string):
+    """
+    Something docstring.
+    """
+    return string
+
+
+def fclose_callback(string):
+    """
+    Something docstring.
+    """
+    return string
+
+
+def fdata_callback(string):
+    """
+    Something docstring.
+    """
+    return string
+
+
 if __name__ == "__main__":
 
-    def fopen_callback(string):
-        """
-        Something docstring.
-        """
-        print(f'OPEN CALLBACK: {string}')
-
-    def fclose_callback(string):
-        """
-        Something docstring.
-        """
-        print(f'CLOSE CALLBACK: {string}')
-
-    def fdata_callback(string):
-        """
-        Something docstring.
-        """
-        print(f'DATA CALLBACK: {string}')
-
-    parse_html("<abc>Hi<def>lol</def>world</abc>", fopen_callback, fdata_callback, fclose_callback)
+    parse_html("<abc>Hi<def>lol</def>world</abc>", fopen_callback,
+               fdata_callback, fclose_callback)
