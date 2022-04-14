@@ -101,7 +101,7 @@ def fdata_callback(string):
     return string
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    parse_html("<abc>Hi<def>lol</def>world</abc>", fopen_callback,
-               fdata_callback, fclose_callback)
+#     parse_html("<abc>Hi<def>lol</def>world</abc>", fopen_callback,
+#                fdata_callback, fclose_callback)
