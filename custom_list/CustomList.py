@@ -1,9 +1,11 @@
-from typing import List
+from typing import List, Iterable
+
 
 class NotSupportedType(Exception):
     """Исключение для типов не являющихся CustomList и list"""
 
-    def __init__(self, message: str = "Type is not include in CustomList and list") -> None:
+    def __init__(self, message: str =
+                 "Type is not include in CustomList and list") -> None:
         self.message = message
         super().__init__(self.message)
 
@@ -14,7 +16,7 @@ class NotSupportedType(Exception):
 class CustomList(list):
     """ Реализация кастомного списка поверх стандартного list """
 
-    def __init__(self, data: List[float]) -> None:
+    def __init__(self, data: Iterable[float]) -> None:
         super().__init__()
         self.__data = data
         self.__list_iter = None
@@ -26,29 +28,29 @@ class CustomList(list):
         self.__list_iter = iter(self.__data)
         return self
 
-    def __next__(self):
+    def __next__(self) -> float:
         return next(self.__list_iter)
 
     def __str__(self) -> str:
         return f'CustomList({self.__data}) {sum(self.__data)}'
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int) -> float:
         return self.__data[key]
 
     @classmethod
-    def __make_add(cls, this: List[float], other: List[float]) -> object:
+    def __make_add(cls, this: object, __o: object) -> object:
 
-        return cls([x + y for (x, y) in zip(this, other)])
+        return cls([x + y for (x, y) in zip(this, __o)])
 
-    def __append_zero(self, small_list, big_list) -> object:
+    @staticmethod
+    def __append_zero(small_list: object, len_big_list: int) -> object:
 
         result = small_list[:]
 
-        while len(result) < len(big_list):
+        while len(result) < len_big_list:
             result.append(0)
 
-        return self.__make_add(result, big_list)
-
+        return result
 
     def __add__(self, __o) -> object:
 
@@ -56,10 +58,10 @@ class CustomList(list):
             raise NotSupportedType
 
         if len(self) > len(__o):
-            return self.__append_zero(__o, self)
+            return self.__make_add(self.__append_zero(__o, len(self)), self)
 
         if len(self) < len(__o):
-            return self.__append_zero(self, __o)
+            return self.__make_add(self.__append_zero(self, len(__o)), __o)
 
         return self.__make_add(self, __o)
 
@@ -67,7 +69,7 @@ class CustomList(list):
         return self + __o
 
     def __neg__(self) -> object:
-        self.__data = list(map(lambda x: -x, self.__data))
+        self.__data = list(map(lambda x: -x, self))
         return self
 
     @staticmethod
@@ -84,18 +86,23 @@ class CustomList(list):
 
         return None
 
-    def __rsub__(self, other):
-        return -self + other
+    def __rsub__(self, __o: object) -> object:
+        return -self + __o
 
     def __eq__(self, __o: object) -> bool:
         return sum(self) == sum(__o)
-        
 
-if __name__ == '__main__':
+    def __lt__(self, __o: object) -> bool:
+        return sum(self) < sum(__o)
 
-    list1 = CustomList([1, 2, 3, 4])
-    list2 = CustomList([5, 6, 7, 8, 5])
+    def __gt__(self, __o: object) -> bool:
+        return sum(self) > sum(__o)
 
-    a = list1 + list2
+    def __ne__(self, __o: object) -> bool:
+        return sum(self) != sum(__o)
 
-    print(a)
+    def __le__(self, __o: object) -> bool:
+        return sum(self) <= sum(__o)
+
+    def __ge__(self, __o: object) -> bool:
+        return sum(self) >= sum(__o)
