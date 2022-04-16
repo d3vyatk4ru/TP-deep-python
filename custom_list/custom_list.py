@@ -16,15 +16,8 @@ class NotSupportedType(Exception):
 class CustomList(list):
     """ Реализация кастомного списка поверх стандартного list """
 
-    def __init__(self, *args, **kwargs):
-
-        super().__init__()
-
-        if not isinstance(args[0], list) and not isinstance(args[0], CustomList):
-            raise NotSupportedType
-
     def __str__(self) -> str:
-        return 'CustomList(' + super().__str__() + ')'+ f' {sum(self)}'
+        return 'CustomList(' + super().__str__() + ')' + f' {sum(self)}'
 
     @classmethod
     def __make_add(cls, this: object, other: object) -> object:
@@ -72,7 +65,7 @@ class CustomList(list):
         if isinstance(other, list):
             return self.__add__(self.__neg_list(other))
 
-        return None
+        raise NotSupportedType
 
     def __rsub__(self, other: object) -> object:
         return -self.__sub__(other)
@@ -94,12 +87,3 @@ class CustomList(list):
 
     def __ge__(self, other: object) -> bool:
         return sum(self) >= sum(other)
-
-if __name__ == '__main__':
-
-    a = CustomList([1, 2, 3])
-    b = CustomList([4, 5, 6])
-
-    c = [4, 5, 6] - a
-
-    print(c)

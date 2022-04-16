@@ -1,10 +1,10 @@
 import unittest
-from CustomList import CustomList, NotSupportedType
+from custom_list import CustomList, NotSupportedType
 
 
 class CustomListTest(unittest.TestCase):
 
-    def test_check_init_custom_list_sum(self):
+    def test_check_init_custom_list_no_change_sum(self):
 
         init_list1 = [1, 2, 3, 4]
         init_list2 = [5, 6, 7, 8]
@@ -18,7 +18,7 @@ class CustomListTest(unittest.TestCase):
             self.assertEqual(list1[i], init_list1[i])
             self.assertEqual(list2[i], init_list2[i])
 
-    def test_check_init_custom_list_sub(self):
+    def test_check_init_custom_list_no_change_sub(self):
 
         init_list1 = [1, 2, 3, 4]
         init_list2 = [5, 6, 7, 8]
@@ -32,7 +32,7 @@ class CustomListTest(unittest.TestCase):
             self.assertEqual(list1[i], init_list1[i])
             self.assertEqual(list2[i], init_list2[i])
 
-    def custom_return_type_sum(self):
+    def test_custom_return_type_sum(self):
 
         list1 = CustomList([1, 2, 3, 4])
         list2 = CustomList([5, 6, 7, 8])
@@ -41,7 +41,7 @@ class CustomListTest(unittest.TestCase):
 
         self.assertIsInstance(tmp, CustomList)
 
-    def custom_return_type_sub(self):
+    def test_custom_return_type_sub(self):
 
         list1 = CustomList([1, 2, 3, 4])
         list2 = CustomList([5, 6, 7, 8])
@@ -294,14 +294,6 @@ class CustomListTest(unittest.TestCase):
 
         self.assertEqual(str(list1), 'CustomList([1, 2, 3, 4]) 10')
 
-    def test_eq_custom_list_false(self):
-
-        list1 = CustomList([1, 2, 3, 4])
-
-        list2 = CustomList([5, 6, 7, 8, 5])
-
-        self.assertFalse(list1 == list2)
-
     def test_neg_custom_list(self):
 
         answer = [-1, -2, -3, -4]
@@ -337,6 +329,24 @@ class CustomListTest(unittest.TestCase):
 
         self.assertListEqual(CustomList._CustomList__append_zero(list1, 5),
                              CustomList([1, 2, 3, 4, 0]))
+
+    def test_eq_custom_list_false(self):
+
+        list1 = CustomList([1, 2, 3, 4])
+
+        list2 = CustomList([5, 6, 7, 8, 5])
+
+        self.assertFalse(list1 == list2)
+
+    def test_eq_custom_list_true_diff_size(self):
+
+        # sum = 31
+        list1 = CustomList([1, 4, 6, 7, 8, 1, 1, 1, 1, 1])
+
+        # sum = 31
+        list2 = CustomList([5, 6, 7, 8, 5])
+
+        self.assertTrue(list1 == list2)
 
     def test_eq_custom_list_true_equal_size(self):
 
@@ -378,9 +388,25 @@ class CustomListTest(unittest.TestCase):
 
         self.assertTrue(list1 < list2)
 
+    def test_lt_custom_list_true_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 1, 1])
+
+        list2 = CustomList([1, 2, 3, 10])
+
+        self.assertTrue(list1 < list2)
+
     def test_lt_custom_list_false(self):
 
         list1 = CustomList([1, 2, 3, 4])
+
+        list2 = CustomList([1, 2, 3, 10])
+
+        self.assertFalse(list2 < list1)
+
+    def test_lt_custom_list_false_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 0, 0])
 
         list2 = CustomList([1, 2, 3, 10])
 
@@ -394,9 +420,25 @@ class CustomListTest(unittest.TestCase):
 
         self.assertFalse(list1 > list2)
 
+    def test_gt_custom_list_true_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 1, 1])
+
+        list2 = CustomList([1, 2, 3, 10])
+
+        self.assertFalse(list1 > list2)
+
     def test_gt_custom_list_false(self):
 
         list1 = CustomList([1, 2, 3, 4])
+
+        list2 = CustomList([1, 2, 3, 10])
+
+        self.assertTrue(list2 > list1)
+
+    def test_gt_custom_list_false_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 1, 1])
 
         list2 = CustomList([1, 2, 3, 10])
 
@@ -410,9 +452,25 @@ class CustomListTest(unittest.TestCase):
 
         self.assertTrue(list1 != list2)
 
+    def test_ne_custom_list_true_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 1, 1])
+
+        list2 = CustomList([1, 2, 3, 10])
+
+        self.assertTrue(list1 != list2)
+
+    def test_ne_custom_list_false_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 0, 0])
+
+        list2 = CustomList([1, 2, 3, 4])
+
+        self.assertFalse(list2 != list1)
+
     def test_ne_custom_list_false(self):
 
-        list1 = CustomList([1, 2, 3, 4])
+        list1 = CustomList([1, 2, 3, 4, 0, 0])
 
         list2 = CustomList([1, 2, 3, 4])
 
@@ -434,9 +492,33 @@ class CustomListTest(unittest.TestCase):
 
         self.assertTrue(list1 <= list2)
 
+    def test_le_custom_list_true1_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 0, 0])
+
+        list2 = CustomList([1, 2, 3, 4])
+
+        self.assertTrue(list1 <= list2)
+
+    def test_le_custom_list_true2_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 1, 1])
+
+        list2 = CustomList([1, 2, 3, 10])
+
+        self.assertTrue(list1 <= list2)
+
     def test_le_custom_list_false(self):
 
         list1 = CustomList([1, 2, 3, 4])
+
+        list2 = CustomList([1, 2, 3, 10])
+
+        self.assertFalse(list2 <= list1)
+
+    def test_le_custom_list_false_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 1, 1])
 
         list2 = CustomList([1, 2, 3, 10])
 
@@ -458,6 +540,22 @@ class CustomListTest(unittest.TestCase):
 
         self.assertTrue(list1 >= list2)
 
+    def test_ge_custom_list_true1_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 4, 0, 0])
+
+        list2 = CustomList([1, 2, 3, 4])
+
+        self.assertTrue(list1 >= list2)
+
+    def test_ge_custom_list_true2_diff_size(self):
+
+        list1 = CustomList([1, 2, 3, 10])
+
+        list2 = CustomList([1, 2, 3, 4, 1, 1])
+
+        self.assertTrue(list1 >= list2)
+
     def test_ge_custom_list_false(self):
 
         list1 = CustomList([1, 2, 3, 10])
@@ -466,9 +564,13 @@ class CustomListTest(unittest.TestCase):
 
         self.assertFalse(list2 >= list1)
 
-    def test_check_exception(self):
+    def test_ge_custom_list_false_diff_size(self):
 
-        self.assertRaises(CustomList(1), NotSupportedType)
+        list1 = CustomList([1, 2, 3, 10])
+
+        list2 = CustomList([1, 2, 3, 4, 1, 1])
+
+        self.assertFalse(list2 >= list1)
 
 
 if __name__ == "__main__":
