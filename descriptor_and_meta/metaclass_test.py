@@ -8,9 +8,8 @@ class TestCustomClass(unittest.TestCase):
         inst = CustomClass()
 
         self.assertFalse(hasattr(CustomClass, 'x'))
-
         with self.assertRaises(AttributeError):
-            inst.x
+            print(inst.x)
 
     def test_real_method_name_raise(self):
 
@@ -19,7 +18,7 @@ class TestCustomClass(unittest.TestCase):
         self.assertFalse(hasattr(CustomClass, 'line'))
 
         with self.assertRaises(AttributeError):
-            inst.line
+            print(inst.line)
 
     def test_real_static_method_name_raise(self):
 
@@ -28,7 +27,7 @@ class TestCustomClass(unittest.TestCase):
         self.assertFalse(hasattr(CustomClass, 'return_9'))
 
         with self.assertRaises(AttributeError):
-            inst.return_9
+            print(inst.return_9)
 
     def test_real_method_name_with_underline_raise(self):
 
@@ -37,7 +36,7 @@ class TestCustomClass(unittest.TestCase):
         self.assertFalse(hasattr(CustomClass, 'return_100__'))
 
         with self.assertRaises(AttributeError):
-            inst.return_100__()
+            print(inst.return_100__)
 
     def test_custom_prefix_attr(self):
 
@@ -79,7 +78,7 @@ class TestCustomClass(unittest.TestCase):
     def test_method_from_cls(self):
 
         with self.assertRaises(AttributeError):
-            CustomClass.x
+            print(CustomClass.x)
 
     def test_dunder_method(self):
 
@@ -96,7 +95,7 @@ class TestCustomClass(unittest.TestCase):
         self.assertFalse(hasattr(inst, 'val'))
 
         with self.assertRaises(AttributeError):
-            inst.val
+            print(inst.val)
 
     def test_str(self):
 
@@ -120,11 +119,10 @@ class TestCustomClass(unittest.TestCase):
         self.assertEqual(inst.custom_val, 99)
 
     def test_yyy(self):
-        
         inst = CustomClass()
 
         with self.assertRaises(AttributeError):
-            inst.yyy
+            print(inst.yyy)
 
 
 if __name__ == '__main__':
