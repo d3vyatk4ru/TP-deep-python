@@ -26,7 +26,12 @@ class CustomMeta(type):
             else:
                 new_clsdct[key] = val
 
+        new_clsdct['__setattr__'] = CustomMeta.__setattr__
+
         return super().__new__(cls, name_cls, bases, new_clsdct, **kwargs)
+
+    def __setattr__(cls, name: str, value) -> None:
+        cls.__dict__['custom_' + name] = value
 
 
 class CustomClass(metaclass=CustomMeta):
@@ -48,9 +53,6 @@ class CustomClass(metaclass=CustomMeta):
 
     def __str__(self) -> str:
         return 'Custom_by_metaclass'
-
-    def __setattr__(self, name: str, value) -> None:
-        self.__dict__['custom_' + name] = value
 
     @staticmethod
     def return_100__():
