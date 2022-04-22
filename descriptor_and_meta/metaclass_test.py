@@ -98,14 +98,34 @@ class TestCustomClass(unittest.TestCase):
         with self.assertRaises(AttributeError):
             inst.val
 
-    def test_instance_attr(self):
+    def test_str(self):
+
+        inst = CustomClass()
+
+        self.assertEqual(str(inst), "Custom_by_metaclass")
+
+    def test_dynamic(self):
+
+        inst = CustomClass()
+        inst.dynamic = "added later"
+
+        self.assertEqual(inst.custom_dynamic, "added later")
+
+    def test_val(self):
 
         inst = CustomClass()
 
         self.assertTrue(hasattr(inst, 'custom_val'))
 
         self.assertEqual(inst.custom_val, 99)
-    
+
+    def test_yyy(self):
+        
+        inst = CustomClass()
+
+        with self.assertRaises(AttributeError):
+            inst.yyy
+
 
 if __name__ == '__main__':
     unittest.main()
