@@ -1,6 +1,7 @@
 import unittest
 from metaclass import CustomClass
 
+
 class TestCustomClass(unittest.TestCase):
 
     def test_real__attr_name_raise(self):
