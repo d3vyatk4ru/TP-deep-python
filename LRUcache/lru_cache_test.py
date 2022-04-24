@@ -1,6 +1,7 @@
 import unittest
 from lru_cache import LRUCache
 
+
 class LRUCacheTest(unittest.TestCase):
 
     def test_set_value(self):
@@ -70,6 +71,7 @@ class LRUCacheTest(unittest.TestCase):
             cache.set(f'k{i}', f'val{i}')
 
         self.assertEqual(str(cache), ' -> [k1, val1] -> [k0, val0] ->')
+
 
 if __name__ == '__main__':
     unittest.main()
