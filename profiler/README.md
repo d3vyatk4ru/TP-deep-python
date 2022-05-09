@@ -3,13 +3,13 @@
 __Профилирование памяти__
 При профилировании памяти видно, что слоты уменьшают количество используемой 
 памяти, однако слабые ссылки уменьшают еще больше:
-![Image alt](https://github.com/d3vyatk4ru/py-TP/raw/master/imgs/call_prof.png "Профилирование памяти")
+![Image alt](https://github.com/d3vyatk4ru/py-TP/blob/main/profiler/imgs/call_prof.png "Профилирование памяти")
 
 ---
 
 __Профилирование вызовов__
 Профилирование вызовов показывает время выполнение каждой функции, суммарное
 время выполнения и кумулятивное: 
-![Image alt](https://github.com/d3vyatk4ru/py-TP/raw/master/imgs/call_prof.png "Профилирование вызовов")
+![Image alt](https://github.com/d3vyatk4ru/py-TP/blob/main/profiler/imgs/mem_prof.png "Профилирование вызовов")
 
 ---
