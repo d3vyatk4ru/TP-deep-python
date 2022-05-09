@@ -96,4 +96,4 @@ if __name__ == '__main__':
 
     mem_profile()
 
-    # call_profile()
+    call_profile()
