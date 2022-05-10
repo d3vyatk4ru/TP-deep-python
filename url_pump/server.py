@@ -1,12 +1,14 @@
 import socket
 from collections import Counter
-from typing import Dict
-from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import json
-import click
 import threading
 import time
+
+import click
+from bs4 import BeautifulSoup
+
+# pylint: disable= E1120
 
 REPLACE_DATA = [
     '\xa0',
@@ -24,11 +26,11 @@ REPLACE_DATA = [
     '5',
     '6',
     '7',
-    '8', 
+    '8',
     '9',
     '-',
     '©',
-    ':', 
+    ':',
     ';',
     ',',
     '.',
@@ -61,29 +63,35 @@ def get_top_count_words(url: str, top: int) -> str:
     for sym in REPLACE_DATA:
         text = text.replace(sym, ' ')
 
-    c = dict(Counter(text.split(' ')))
+    count = dict(Counter(text.split(' ')))
 
     try:
-        del c['']
+        del count['']
     except KeyError:
         pass
-    
-    c = dict(sorted(c.items(), key = lambda x: x[1], reverse=True)[:top])
 
-    json_data = json.dumps(c, ensure_ascii=False)
+    count = dict(
+        sorted(
+            count.items(), key=lambda x: x[1], reverse=True
+        )[:top]
+    )
+
+    json_data = json.dumps(count, ensure_ascii=False)
 
     return json_data
 
 
 class Server:
 
-    def __init__(self, top_words: int, port: int = 15_000, n_workers: int=5) -> None:
+    def __init__(self, top_words: int, port: int = 15_000,
+                 n_workers: int = 5) -> None:
         self.n_workers = n_workers
         self.top_word = top_words
         self.lock = threading.Lock()
         self.port = port
         self.n_processed_urls = 0
         self.num_threads = 0
+        self.sock = None
 
     def start_master(self) -> None:
         serv = threading.Thread(target=self.server, daemon=True)
@@ -110,12 +118,10 @@ class Server:
 
             with self.lock:
                 self.num_threads += 1
-            
+
             thread = threading.Thread(
                 target=self.workers,
-                args=(data.decode(),
-                self.top_word,
-                client)
+                args=(data.decode(), self.top_word, client)
             )
 
             thread.start()
@@ -139,7 +145,7 @@ class Server:
 @click.argument('n_workers', default=5)
 @click.argument('top_words', default=3)
 def start_server_command(n_workers: int, top_words: int):
-    
+
     server = Server(top_words, 15_000, n_workers)
 
     server.start_master()
@@ -152,10 +158,4 @@ def start_server_command(n_workers: int, top_words: int):
 
 if __name__ == "__main__":
 
-    # start_server_command()
-
-    url = "https://edition.cnn.com/"
-
-    res = get_top_count_words(url, 3)
-
-    print(res)
+    start_server_command()

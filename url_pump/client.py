@@ -1,12 +1,17 @@
 import socket
 import json
 from typing import List
-import click
 import threading
+
+import click
+
+# pylint: disable= E1120
+
 
 class Client:
 
-    def __init__(self, urls: List[str]=None, port: int=15_000, n_threads: int = 5) -> None:
+    def __init__(self, urls: List[str] = None, port: int = 15_000,
+                 n_threads: int = 5) -> None:
         self.urls = urls
         self.port = port
         self.n_threads = n_threads
@@ -19,7 +24,8 @@ class Client:
         n_urls = int(n_urls) + 1 if len(urls) % n_threads else int(n_urls)
 
         return [
-            urls[n_urls * start:n_urls * (start + 1)] for start in range(n_threads)
+            urls[n_urls * start:n_urls * (start + 1)]
+            for start in range(n_threads)
         ]
 
     def _worker(self, part_url: List[List[str]]) -> None:
@@ -36,7 +42,7 @@ class Client:
             sock.close()
 
     def start_dump(self) -> None:
-        
+
         separated_url = self.separate_url(self.urls, self.n_threads)
 
         threads = [
@@ -56,14 +62,15 @@ class Client:
 @click.argument('data_path', default='url.json')
 def client_start_command(data_path: str, n_threads: int):
 
-    with open(data_path, 'r') as json_file:
+    with open(data_path, 'r', encoding='utf-8') as json_file:
         urls: List[str] = json.load(json_file)
 
     print('file: ', data_path)
     print('n_threds: ', n_threads)
-    
+
     client = Client(urls, 15_000, n_threads)
     client.start_dump()
+
 
 if __name__ == '__main__':
 
