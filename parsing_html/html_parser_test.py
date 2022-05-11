@@ -1,12 +1,16 @@
 import unittest
 from unittest.mock import patch
-import html_parser
-from faker import Faker
 from collections import deque
 import pathlib
 import os
 
+from faker import Faker
+import html_parser
+
+# pylint: disable=C0116
+
 PATH2FILE = pathlib.Path('data.txt')
+open(PATH2FILE, 'a', encoding='utf-8').close()
 
 def fopen_callback(string):
     return string
@@ -51,10 +55,10 @@ def make_html(n_tags: int) -> str:
     return html
 
 class ParserTest(unittest.TestCase):
-    
+
     @patch('html_parser.parse_html')
     def test_simple_html(self, parse_html):
-        
+
         html_str = "<abc>def</abc>"
 
         parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -63,7 +67,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fopen_callback')
     def test_open_callback(self, fopen_callback):
-        
+
         html_str = "<abc>def</abc>"
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -72,7 +76,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fdata_callback')
     def test_close_callback(self, fdata_callback):
-        
+
         html_str = "<abc>def</abc>"
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -81,7 +85,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fclose_callback')
     def test_data_callback(self, fclose_callback):
-        
+
         html_str = "<abc>def</abc>"
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -91,7 +95,7 @@ class ParserTest(unittest.TestCase):
     def test_simple_html_parse(self):
 
         answer = "abc\ndef\nabc\n"
-        
+
         html_str = "<abc>def</abc>"
 
         html_parser.parse_html(html_str, callback_file, callback_file, callback_file)
@@ -104,7 +108,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fopen_callback')
     def test_empty_html_open_callback(self, fopen_callback):
-        
+
         html_str = ""
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -113,7 +117,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fdata_callback')
     def test_empty_html_data_callback(self, fdata_callback):
-        
+
         html_str = ""
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -122,7 +126,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fclose_callback')
     def test_empty_html_close_callback(self, fclose_callback):
-        
+
         html_str = ""
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -132,7 +136,7 @@ class ParserTest(unittest.TestCase):
     def test_empty_html_parse(self):
 
         answer = ""
-        
+
         html_str = ""
 
         html_parser.parse_html(html_str, callback_file, callback_file, callback_file)
@@ -145,7 +149,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fopen_callback')
     def test_open_callback_in_3_comm(self, fopen_callback):
-        
+
         html_str = "<abc>comm2<def>comm1</def>+comm3</abc>"
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -154,7 +158,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fdata_callback')
     def test_data_callback_in_3_comm(self, fdata_callback):
-        
+
         html_str = "<abc>comm2<def>comm1</def>+comm3</abc>"
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -163,7 +167,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fclose_callback')
     def test_close_callback_in_3_comm(self, fclose_callback):
-        
+
         html_str = "<abc>comm2<def>comm1</def>+comm3</abc>"
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -173,7 +177,7 @@ class ParserTest(unittest.TestCase):
     def test_html_parse_in_3_comm(self):
 
         answer = "abc\ndef\ncomm1\ndef\ncomm2comm3\nabc\n"
-        
+
         html_str = "<abc>comm2<def>comm1</def>comm3</abc>"
 
         html_parser.parse_html(html_str, callback_file, callback_file, callback_file)
@@ -187,7 +191,7 @@ class ParserTest(unittest.TestCase):
     def test_html_parse_2_comm(self):
 
         answer = "abc\ndef\ncomm1\ndef\ncomm2\nabc\n"
-        
+
         html_str = "<abc>comm2<def>comm1</def></abc>"
 
         html_parser.parse_html(html_str, callback_file, callback_file, callback_file)
@@ -197,11 +201,11 @@ class ParserTest(unittest.TestCase):
         clear_file(PATH2FILE)
 
         os.remove(PATH2FILE)
-        
+
 
     @patch('html_parser.fopen_callback')
     def test_open_callback_100_tags(self, fopen_callback):
-        
+
         html_str = make_html(100)
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -210,7 +214,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fdata_callback')
     def test_data_callback_100_tags(self, fdata_callback):
-        
+
         html_str = make_html(100)
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -219,7 +223,7 @@ class ParserTest(unittest.TestCase):
 
     @patch('html_parser.fclose_callback')
     def test_close_callback_100_tags(self, fclose_callback):
-        
+
         html_str = make_html(100)
 
         html_parser.parse_html(html_str, fopen_callback, fdata_callback, fclose_callback)
@@ -228,6 +232,4 @@ class ParserTest(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    open(PATH2FILE, 'a').close()
-    
     unittest.main()
