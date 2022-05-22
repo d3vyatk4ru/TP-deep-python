@@ -2,12 +2,14 @@ from typing import List, Tuple
 import ctypes
 import time
 import random
+import os
 
-SIZE = 3
+SIZE = 70
+
 
 def multiply_py(left: List[List[int]],
-             right: List[List[int]],
-             size: int) -> List[List[int]]:
+                right: List[List[int]],
+                size: int) -> List[List[int]]:
     """ Multiply ONLY square matrix """
 
     result: List[List[int]] = [
@@ -22,7 +24,8 @@ def multiply_py(left: List[List[int]],
     return result
 
 
-def mat_mult_seq_py(matrix_sequence: Tuple[List[List[int]]]) -> List[List[int]]:
+def mat_mult_seq_py(matrix_sequence: Tuple[List[List[int]]])\
+                    -> List[List[int]]:
     """ Multiply sequence of matrix """
 
     size: int = len(matrix_sequence[0])
@@ -39,59 +42,76 @@ def mat_mult_seq_py(matrix_sequence: Tuple[List[List[int]]]) -> List[List[int]]:
     return result
 
 
-def mat_mult_seq_c(matrix_sequence: Tuple[List[List[int]]], 
-                    n_matrix: int):
+def mat_mult_seq_c(matrix_sequence: Tuple[List[List[int]]],
+                   n_matrix: int,
+                   size: int) -> List[List[int]]:
     """" ABC """
 
     matrixes = (ctypes.POINTER(ctypes.POINTER(ctypes.c_int)) * n_matrix)()
 
     for i in range(n_matrix):
-        matrixes[i] = (ctypes.POINTER(ctypes.c_int) * SIZE)()
-        for j in range(SIZE):
+        matrixes[i] = (ctypes.POINTER(ctypes.c_int) * size)()
+        for j in range(size):
 
-            matrixes[i][j] = (ctypes.c_int * SIZE)()
+            matrixes[i][j] = (ctypes.c_int * size)()
 
-            for k in range(SIZE):
+            for k in range(size):
                 matrixes[i][j][k] = matrix_sequence[i][j][k]
 
-    output = (ctypes.POINTER(ctypes.c_int) * SIZE)()
+    output = (ctypes.POINTER(ctypes.c_int) * size)()
 
-    for i in range(SIZE):
-        output[i] = (ctypes.c_int * SIZE)()
+    for i in range(size):
+        output[i] = (ctypes.c_int * size)()
 
-    lib = ctypes.cdll.LoadLibrary('/home/d3vyatk4ru/Рабочий стол/c_ext/libmatmul.so')
+    lib = ctypes.cdll.LoadLibrary(os.path.abspath('libmatmul.so'))
 
     mat_mult = lib.mat_mult_seq_c
 
-    mat_mult(ctypes.byref(matrixes), output, n_matrix, SIZE)
+    mat_mult(ctypes.byref(matrixes), output, n_matrix, size)
 
-    for i in range(SIZE):
-        for j in range(SIZE):
-            print(output[i][j], end=' ')
-        print()
+    matrix_output = []
 
-def matrix_generate(n_matrix: int):
-    pass
+    for i in range(size):
+        row = []
+        for j in range(size):
+            row.append(output[i][j])
+        matrix_output.append(row)
+
+    return matrix_output
+
+
+def matrix_generate(n_matrix: int = 2,
+                    size: int = 2):
+
+    if n_matrix < 1:
+        raise Exception('Number of matrix  < 1')
+
+    matrixes = []
+
+    for _ in range(n_matrix):
+        mat = []
+        for _ in range(size):
+            col = []
+            for _ in range(size):
+                col.append(random.randint(-10, 10))
+            mat.append(col)
+        matrixes.append(mat)
+
+    return matrixes
 
 
 if __name__ == '__main__':
 
-    matrixes = tuple([
-        [[1, 2], [3, 4]],
-        [[5, 6], [7, 8]],
-        [[9, 0], [1, 2]],
-        [[3, 4], [5, 6]],
-        [[7, 8], [9, 0]],
-    ])
+    matrix = matrix_generate(100, SIZE)
 
     start = time.time()
 
-    print(mat_mult_seq_py(matrixes))
+    mat_mult_seq_py(matrix)
 
     print(f'Time of Python code: {time.time() - start}')
 
     start = time.time()
 
-    mat_mult_seq_c(matrixes, len(matrixes))
+    mat_mult_seq_c(matrix, len(matrix), SIZE)
 
     print(f'Time of C code: {time.time() - start}')
