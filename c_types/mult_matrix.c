@@ -38,6 +38,12 @@ int **mat_mult_seq_c(int ***matrix_sequence, int **result, int seq_size, int siz
         copy(result, tmp, size);
     }
 
+    for (int i = 0; i < size; ++i) {
+        free(tmp[i]);
+    }
+
+    free(tmp);
+
     return result;
 
 }
